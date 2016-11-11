@@ -1,0 +1,48 @@
+/* The bad way */
+a.twitter {
+  min-width: 100px;
+  padding: 1em;
+  border-radius: 1em;
+  background: #55acee
+  color: #fff;
+}
+span.facebook {
+  min-width: 100px;
+  padding: 1em;
+  border-radius: 1em;
+  background: #3b5998;
+  color: #fff;
+}
+
+
+
+/* The best way */
+%button {
+  min-width: 100px;
+  padding: 1em;
+  border-radius: 1em;
+}
+%twitter-background {
+  color: #fff;
+  background: #55acee;
+}
+%facebook-background {
+  color: #fff;
+  background: #3b5998;
+}
+
+.btn {
+  &--twitter {
+    @extend %button;
+    @extend %twitter-background;
+  }
+  &--facebook {
+    @extend %button;
+    @extend %facebook-background;
+  }
+}
+
+
+<a href="#" class="btn--twitter">Twitter</a>
+<a href="#" class="btn--facebook">Facebook</a>
+

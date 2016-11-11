@@ -1,0 +1,36 @@
+
+// Debug 명령어
+
+@debug 10em + 22em;
+@debug 10em + 12em;
+@debug 10em + 2em;
+
+
+
+// list -- http://hugogiraudel.com/2013/07/15/understanding-sass-lists/
+
+$list: "item-1", "item-2", "item-3";
+
+nth($list, 0) -> throws error
+nth($list, 1) -> "item-1"
+
+
+length($variable)
+index($list, $value)
+append($list, $value[, $separator])
+join($list-1, $list-2[, $separator])
+zip(*$lists)
+
+
+
+// module - http://sass-lang.com/documentation/Sass/Script/Functions.html#map-functions
+
+// rgb
+
+rgb($red, $green, $blue)
+rgba($red, $green, $blue, $alpha)
+red($color)
+green($color)
+blue($color)
+mix($color1, $color2, [$weight])
+

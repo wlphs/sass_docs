@@ -1,0 +1,138 @@
+
+// Nested Rules
+
+#main p {
+  color: #00ff00;
+  width: 97%;
+
+  .redbox {
+    background-color: #ff0000;
+    color: #000000;
+  }
+}
+
+
+// 결과값 
+
+#main p {
+  color: #00ff00;
+  width: 97%; }
+#main p .redbox {
+  background-color: #ff0000;
+  color: #000000; 
+}
+
+
+
+
+
+
+
+
+#main {
+  width: 97%;
+
+  p, div {
+    font-size: 2em;
+    a { font-weight: bold; }
+  }
+
+  pre { font-size: 3em; }
+}
+
+
+// 결과값..
+
+#main {
+  width: 97%; }
+  #main p, #main div {
+    font-size: 2em; }
+    #main p a, #main div a {
+      font-weight: bold; }
+  #main pre {
+    font-size: 3em; }
+
+
+
+
+
+
+
+// 감싸지는 부모도 지정 가능.
+a {
+  font-weight: bold;
+  text-decoration: none;
+  &:hover { text-decoration: underline; }
+  body.firefox & { font-weight: normal; }
+}
+
+
+// 결과값 
+a {
+  font-weight: bold;
+  text-decoration: none; 
+}
+a:hover {
+  text-decoration: underline; 
+}
+body.firefox a {
+    font-weight: normal; 
+}
+
+
+// 앞에 이름 같이 쓰는 애들도 선택가능 . 
+#main {
+  color: black;
+  &-sidebar { border: 1px solid; }
+}
+
+
+// 결과값
+#main {
+  color: black; 
+}
+#main-sidebar {
+  border: 1px solid; 
+}
+
+
+
+
+/// 속성 네스팅 가능
+
+.funky {
+  font: {
+    family: fantasy;
+    size: 30em;
+    weight: bold;
+  }
+}
+
+
+.funky {
+  font-family: fantasy;
+  font-size: 30em;
+  font-weight: bold; 
+}
+
+
+
+// @at-root 최상위 루트 선택자
+
+.parent {
+  ...
+  @at-root {
+    .child1 { ... }
+    .child2 { ... }
+  }
+  .step-child { ... }
+}
+
+
+// 결과값
+.parent { ... }
+.child1 { ... }
+.child2 { ... }
+.parent .step-child { ... }
+
+

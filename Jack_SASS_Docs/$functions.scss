@@ -1,0 +1,106 @@
+
+
+/// 조건문
+
+@if $support-legacy {
+  // ...
+} @else {
+  // ...
+}
+
+
+
+//  부정 조건문
+@if not index($list, $item) {
+  // ...
+}
+
+
+// 반환 함수에서는 조건문 밖에서도 @return 을 할수 있도록
+
+@function dummy($condition) {
+  @if $condition {
+    @return true;
+  }
+
+  @return false;
+}
+
+
+// each 반복문
+
+@each $theme in $themes {
+  .section-#{$theme} {
+    background-color: map-get($colors, $theme);
+  }
+}
+
+
+// map 에서 반복할때는 $key와 $value를 변수 이름으로 사용
+@each $key, $value in $map {
+  .section-#{$key} {
+    background-color: $value;
+  }
+}
+
+
+@for $i from 1 through 10 {
+  .foo:nth-of-type(#{$i}) {
+    border-color: hsl($i * 36, 50%, 50%);
+  }
+}
+
+
+
+// 기초 함수 문법
+
+@function remy($pxsize) {
+    @return ($pxsize/16)+rem;
+}
+ 
+h1 { font-size: remy(32);}
+
+
+// >> h1 { font-size: 2rem; }
+
+
+
+// 변수 설정 후 함수 사용
+
+$col-count: 12;
+ 
+@function col-pct($columns) {
+    @return unquote((100/$col-count)*$columns+"%");
+}
+
+.col-6 { width: col-pct(6);}
+
+
+// >> .col-6 { width: 50%; }
+
+
+
+// 변수를 두개 받지만 변수가 안들어올 경우 기본 값 처리.
+
+@function remy($pxsize,$rembase:16) {
+  @return ($pxsize/$rembase)+rem;
+}
+
+
+h3 { font-size: remy(32);}
+p { font-size: remy(16,8);}
+
+
+// 여러개의 변수를 받지만 몇개인지는 모를때
+
+@function pad($pads...) {
+  @return $pads;
+}
+
+
+.five {padding: pad(25px,35px);}
+ 
+.six {padding: pad(25px,35px,45px);}
+ 
+.seven {padding: pad(25px,35px,45px,55px);}
+

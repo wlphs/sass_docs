@@ -1,0 +1,39 @@
+
+// 부트스트랩을 이용한 코딩시 extend 를 이용하면 적용이 된다.
+
+/* Import bootstrap-sass so that we have access to all of its selectors */
+@import "bootstrap";
+
+
+/* Author Bio and Author Name are just Bootstrap .row elements */
+.author-bio,
+.author-name {
+  @extend .row;
+}
+ 
+/* Author nameLabel, nameFirst and nameLast need
+   to be a third of their container's width */
+.author-nameLabel,
+.author-nameFirst,
+.author-nameLast {
+   @extend .col-md-4;
+}
+ 
+/* The paragraph inside the author's bio should be full width */
+.author-bio p {
+    @extend .col-md-12;
+}
+
+
+
+///  결과값 이것뿐 만은 아니지만 소스를 보면 부트스트랩 안에 사이사이 들어가 있다.
+
+.col-md-4, .author-nameLabel,
+.author-nameFirst,
+.author-nameLast {
+  width: 33.3333333333%;
+}
+///
+
+
+

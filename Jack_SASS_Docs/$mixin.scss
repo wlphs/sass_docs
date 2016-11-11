@@ -1,0 +1,149 @@
+
+
+// mixin 의 사용법
+
+// 함수 형태
+@mixin linx ($link, $visit, $hover, $active) {
+  a {
+    color: $link;
+    &:visited {
+      color: $visit;
+    }
+    &:hover {
+      color: $hover;   
+    }
+    &:active {
+      color: $active;
+    }
+  }
+}
+
+
+@include linx(white, blue, green, red);
+
+// 결과값 
+a:link { color: white; }
+a:visited { color: blue; }
+a:hover { color: green; }
+a:active { color: red; }
+
+
+
+
+
+/// 변수 형태
+$font-base: 12px;
+ 
+@mixin sample {
+  font-size: $font-base;
+}
+ 
+p {
+  @include sample;
+}
+
+
+// 결과값 
+
+p {
+  font-size: 12px;
+}
+
+
+/// 함수형태 
+@mixin headline ($color, $size) {
+  color: $color;
+  font-size: $size;
+}
+ 
+h1 {
+  @include headline(green, 12px);
+}
+
+
+// 결과값 
+h1 {
+  color: green;   
+  font-size: 12px;
+}
+
+
+// 키워드를 직접 입력하여 순서 상관없이 입력도 가능하다.
+@mixin headline($size, $color: red) {
+  color: $color;
+  font-size: $size;
+}
+ 
+h1 {
+  @include headline($color: blue, $size: 12px);
+}
+
+// 결과값
+
+h1 {
+  color: blue;
+  font-size: 12px;
+}
+
+
+
+
+// 변수가 몇개인지 모를 때 
+
+@mixin pad ($pads...) {
+  padding: $pads;
+}
+ 
+.one {
+  @include pad(20px);
+}
+.two {
+  @include pad(10px 20px);
+}
+.three {
+  @include pad(10px 20px 40px);
+}
+.four {
+  @include pad(10px 20px 30px 20px);
+}
+
+
+// 첫번째 변수는 정하고 그 뒤변수의 갯수를 모를 때
+
+@mixin pad ($color,$pads...) {
+  color: $color;
+  padding: $pads;
+}
+.four { @include pad(orange, 10px 20px 30px 20px); }
+
+
+
+
+// @content 지시문
+// @mixin 안에서 지시하지 않은 스타일을 전달 할 수 있다.
+@mixin cont {
+  background-color: black;
+  color: white;
+  @content;
+}
+
+
+
+
+div {
+  @include cont {
+      font-size: 12px;
+      font-style: italic;
+  }
+}
+ 
+ // 결과 값 
+div {
+  background-color: black;
+  color: white;
+  font-size: 12px;
+  font-style: italic;
+}
+
+
+

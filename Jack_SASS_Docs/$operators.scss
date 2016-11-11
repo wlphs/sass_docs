@@ -1,0 +1,68 @@
+h2 {
+    font-size: 5px + 2em; // error 양립 할 수 없는 단위
+ 
+    font-size: 5px + 2; // 7px
+}
+
+
+h2 {
+    font-size: 5px * 2px; // 단위끼리의 곱하기는 잘못된 css 를 만든다.
+}
+
+
+/// 바로된 연산 방법
+
+h2 {
+     width: 3px * 5 + 5px; // 20px
+ 
+     width: 3 * (5px + 5px); // 30px
+ 
+     width: 3px + (6px / 2) * 3; // 12px
+ }
+
+h2 {
+    font-size: 16px / 24px // Outputs as CSS
+ 
+    font-size: (16px / 24px) // Uses parentheses, does division
+ 
+    font-size: #{$base-size} / #{$line-height}; // Uses interpolation, outputs as CSS
+ 
+    font-size: $base-size / $line-height // Uses variables, does division
+ 
+    opacity: random(4) / 5; // Uses a function, does division
+ 
+    padding-right: 2px / 4px + 3px // Uses an arithmetic expression, does division
+}
+
+
+
+
+// 비교문에서의 반환
+
+("5" == 5) // returns false
+ 
+(20px == 20) // returns true (this does not work in LibSass)
+
+
+
+// 논리 연산자  and ,or , not
+
+@if (length($list-map) > 2 or not (length($list-map) == 3)) {...}
+
+
+// 색상 연산자
+
+h2 {
+    color: #468499 + #204479;
+}
+h2 {
+    color: #66c8ff;
+}
+
+
+h2 {
+    color: rgba(70, 132, 153, 1) + rgba(32, 68, 121, 1);
+ 
+    // error 알파 채널은 반드시 같아야 한다.
+    color: rgba(70, 132, 153, .9) + rgba(32, 68, 121, .7);
+}

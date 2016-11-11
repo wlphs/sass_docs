@@ -1,0 +1,330 @@
+$breakpoints: (
+  'small'  : 767px,
+  'medium' : 992px,
+  'large'  : 1200px
+) !default;
+ 
+/// 반응형 매니저.
+/// .element {
+///   color: red; 
+///  
+///   @include respond-to('small') {
+///     color: blue;
+///   }
+/// }
+
+@mixin respond-to($breakpoint) {
+  @if map-has-key($breakpoints, $breakpoint) {
+    @media (min-width: map-get($breakpoints, $breakpoint)) {
+      @content;
+    }
+  }
+ 
+  @else {
+    @warn "Unfortunately, no value could be retrieved from `#{$breakpoint}`. "
+        + "Please make sure it is defined in `$breakpoints` map.";
+  }
+}
+
+
+
+/// 간단한 선택자 내포 API를 제공하는 헬퍼 믹스인
+/// @param {String} $selector - 선택자
+@mixin when-inside($selector) {
+  #{$selector} & {
+    @content;
+  }
+}
+
+
+/// 내부 float을 해제하는 헬퍼
+/// @author Nicolas Gallagher
+/// @link http://nicolasgallagher.com/micro-clearfix-hack/ Micro Clearfix
+@mixin clearfix {
+  &::after {
+    content: '';
+    display: table;
+    clear: both;
+  }
+}
+
+
+/// 요소 크기를 설정하는 헬퍼
+/// @author Hugo Giraudel
+/// @param {Length} $width
+/// @param {Length} $height
+@mixin size($width, $height: $width) {
+  width: $width;
+  height: $height;
+}
+
+/// position 속성을 정하고 위치값을 설정하는 헬퍼
+@mixin position($position, $args) {
+  @each $o in top right bottom left {
+        $i: index($args, $o);
+ 
+    @if $i and $i + 1 <= length($args) and type-of(nth($args, $i + 1)) == number  {
+          #{$o}: nth($args, $i + 1);
+    }
+  }
+ 
+  position: $position;
+}
+
+
+/// .element {
+///   @include absolute(top 0 left 1em);
+/// }
+
+@mixin absolute($args) {
+        @include position("absolute", $args);
+}
+
+/// .other-element {
+///   @include fixed(top 1em left "WAT? A STRING?!" right 10% bottom)
+/// }
+
+@mixin fixed($args) {
+        @include position("fixed", $args);
+}
+ 
+@mixin relative($args) {
+        @include position("relative", $args);
+}
+
+
+
+/// 브라우저별 접두사를 붙여야 하는 경우 설정하는 헬퍼
+/// .element {
+///   @include prefix((transform: translate(-50%, -50%)), webkit ms);
+/// }
+/// .other-element {
+///   @include prefix((
+///     column-count: 3,
+///     column-gap: 1em,
+///     column-rule: 1px solid silver,
+///     column-width: 20em
+///  )), webkit moz);
+/// }
+
+@mixin prefix($map, $vendors: webkit moz ms o) {
+  @each $prop, $value in $map {
+        @if $vendors {
+          @each $vendor in $vendors {
+            #{"-" + $vendor + "-" + $prop}: #{$value};
+          }
+        }
+        // Dump regular property anyway
+        #{$prop}: #{$value};
+  }
+}
+
+
+/// .element {
+///   @include transform(rotate(42deg));
+/// }
+
+@mixin transform($value) {
+      @include prefix(transform, $value, webkit ms);
+}
+ 
+@mixin column-count($value) {
+      @include prefix(column-count, $value, webkit moz);
+}
+
+
+
+
+/// map 이중 구조에서 깊은 곳의 데이터를 불러온다.
+/**
+$grid-configuration: (
+  'columns': 12,
+  'layouts': (
+    'small': 800px,
+    'medium': 1000px,
+    'large': 1200px,
+  ),
+);
+ 
+ $medium: map-deep-get($grid-configuration, 'layouts', 'medium');
+*/
+@function map-deep-get($map, $keys...) {
+  @each $key in $keys {
+    $map: map-get($map, $key);
+  }
+ 
+  @return $map;
+}
+
+/// 맵의 깊은 곳에 있는 데이터를 변경한다. 
+/// $medium: map-deep-set($grid-configuration, 'layouts', 'medium', 1300px);
+
+@function map-deep-set($map, $keys.../*, $value */) {
+  $map-list: ($map,);
+  $result: null;
+ 
+  @if length($keys) == 2 {
+    @return map-merge($map, (nth($keys, 1): nth($keys, -1)));
+  }
+ 
+  @for $i from 1 through length($keys) - 2 {
+    $map-list: append($map-list, map-get(nth($map-list, -1), nth($keys, $i)));
+  }
+ 
+  @for $i from length($map-list) through 1 {
+    $result: map-merge(nth($map-list, $i), (nth($keys, $i): if($i == length($map-list), nth($keys, -1), $result)));
+  }
+ 
+  @return $result;
+}
+
+
+/// map 의 최대 depth 를 반환한다.
+// $depth: map-depth($grid-configuration); -> 2
+
+@function map-depth($map) {
+  $level: 1;
+ 
+  @each $key, $value in $map {
+    @if type-of($value) == "map" {
+      $level: max(map-depth($value) + 1, $level);
+    }
+  }
+ 
+  @return $level;
+}
+
+
+/// map 에 해당 키가 있는지의 여부를 반환한다.
+/// $depth: map-has-keys($grid-configuration, 'layouts', 'medium');   -> true
+/// $depth: map-has-keys($grid-configuration, 'layouts', 'huge');   -> false
+
+@function map-has-nested-keys($map, $keys...) {
+  @each $key in $keys {
+    @if not map-has-key($map, $key) {
+      @return false;
+    }
+    $map: map-get($map, $key);
+  }
+ 
+  @return true;
+}
+
+/// 두개의 리스트를 묶어 맵으로 변환시켜준다.
+
+/*
+$layout-names: 'small', 'medium', 'large', 'huge';
+$layout-values: 600px, 900px, 1200px, 1500px;
+ 
+$breakpoints: map-zip($layout-names, $layout-values);
+// -> ('small': 600px, 'medium': 900px, 'large': 1200px, 'huge': 1500px)
+
+*/
+
+@function map-zip($keys, $values) {
+  $l-keys: length($keys);
+  $l-values: length($values);
+  $min: min($l-keys, $l-values);
+  $map: ();
+ 
+  @if $l-keys != $l-values {
+    @warn "There are #{$l-keys} key(s) for #{$l-values} value(s) in the map for `map-zip`. "
+        + "Resulting map will only have #{$min} pairs.";
+  }
+ 
+  @if $min == 0 {
+    @return $map;
+  }
+ 
+  @for $i from 1 through $min {
+    $map: map-merge($map, (nth($keys, $i): nth($values, $i)));
+  }
+ 
+  @return $map;
+}
+
+
+
+// 마지막 deep 변수에 true 를 주면 맵의 데이터를 중첩하며 쌓아서 새로운 맵으로 반환하는 듯... 
+// 있는 데이터는 나중에 쌓인 데이터로 변경이 되고 없는 데이터는 새롭게 생셩하는 듯... 짐작이다.
+// deep 변수를 주지 않을경우 마지막 데이터로 바꾸는듯한데... 확실치 않다.
+// 많이 사용하지는 않을거 같아서 이정도만 한다.
+
+/// jQuery-style extend function
+/// About `map-merge()`:
+/// * only takes 2 arguments
+/// * is not recursive
+/// @param {Map} $map - first map
+/// @param {ArgList} $maps - other maps
+/// @param {Bool} $deep - recursive mode
+/// @return {Map}
+
+@function map-extend($map, $maps.../*, $deep */) {
+  $last: nth($maps, -1);
+  $deep: $last == true;
+  $max: if($deep, length($maps) - 1, length($maps));
+ 
+  // Loop through all maps in $maps...
+  @for $i from 1 through $max {
+    // Store current map
+    $current: nth($maps, $i);
+ 
+    // If not in deep mode, simply merge current map with map
+    @if not $deep {
+      $map: map-merge($map, $current);
+    } @else {
+      // If in deep mode, loop through all tuples in current map
+      @each $key, $value in $current {
+ 
+        // If value is a nested map and same key from map is a nested map as well
+        @if type-of($value) == "map" and type-of(map-get($map, $key)) == "map" {
+          // Recursive extend
+          $value: map-extend(map-get($map, $key), $value, true);
+        }
+ 
+        // Merge current tuple with map
+        $map: map-merge($map, ($key: $value));
+      }
+    }
+  }
+ 
+  @return $map;
+}
+
+
+/*
+
+$grid-configuration-default: (
+  'columns': 12,
+  'layouts': (
+    'small': 800px,
+    'medium': 1000px,
+    'large': 1200px,
+  ),
+);
+ 
+$grid-configuration-custom: (
+  'layouts': (
+    'large': 1300px,
+    'huge': 1500px
+  ),
+);
+ 
+$grid-configuration-user: (
+  'direction': 'ltr',
+  'columns': 16,
+  'layouts': (
+    'large': 1300px,
+    'huge': 1500px
+  ),
+);
+ 
+// Not deep
+$grid-configuration: map-extend($grid-configuration-default, $grid-configuration-custom, $grid-configuration-user);
+// -> ("columns": 16, "layouts": (("large": 1300px, "huge": 1500px)), "direction": "ltr")
+ 
+// Deep
+$grid-configuration: map-extend($grid-configuration-default, $grid-configuration-custom, $grid-configuration-user, true);
+// -> ("columns": 16, "layouts": (("small": 800px, "medium": 1000px, "large": 1300px, "huge": 1500px)), "direction": "ltr")
+
+*/

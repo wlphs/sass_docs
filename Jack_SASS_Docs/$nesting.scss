@@ -1,0 +1,59 @@
+
+/// nesting basic
+
+.page {
+    font-family: sans-serif;
+    .content {
+        background-color: black;
+        .text {
+            color: white;
+            font-size: 12px;
+            .headline {
+                font-weight: bold;
+                a {
+                    color: blue;
+                    &:visited {
+                        color: green;
+                    }
+                    &:hover {
+                        color: red;
+                    }
+                    &:active {
+                        color: yellow;
+                    }
+                }
+            }
+        }
+    }
+}
+
+// 부모 선택자 Nesting
+
+a {
+    color: blue;
+    &:visited {
+    color: green;
+    }
+    &:hover {
+    color: red;
+    }
+    &:active {
+    color: yellow;
+    }
+}
+
+
+.col {
+    &-span1 { width: 8.33%; }
+    &-span2 { width: 16.66%; }
+    &-span3 { width: 24.99%; }
+}
+
+// 속성 Nesting
+.example {
+    border: {
+        style: dashed;
+        width: 30px;
+        color: blue;
+    }
+}
