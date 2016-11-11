@@ -1,6 +1,6 @@
-# Airbnb CSS / Sass Styleguide
+# CSS / Sass Styleguide
 
-*A mostly reasonable approach to CSS and Sass*
+* CSS 및 Sass 에 대한 합리적인 접근방식
 
 ## Table of Contents
 
@@ -29,6 +29,8 @@
 ### Rule declaration
 
 A “rule declaration” is the name given to a selector (or a group of selectors) with an accompanying group of properties. Here's an example:
+규칙 선언은 동반하는 그룹에 대한 속성 또는 선택자에 주어진 이름이다.
+
 
 ```css
 .listing {
@@ -40,6 +42,8 @@ A “rule declaration” is the name given to a selector (or a group of selector
 ### Selectors
 
 In a rule declaration, “selectors” are the bits that determine which elements in the DOM tree will be styled by the defined properties. Selectors can match HTML elements, as well as an element's class, ID, or any of its attributes. Here are some examples of selectors:
+
+규칙 선언에서 선택자는 DOM 트리의 요소가 정의된 속성으로 스타일을 결정한다. 선택자는 HTML 요소 뿐만 아니라 요소의 클래스, ID 또는 그의 특성과 일치 할 수 있다.
 
 ```css
 .my-element-class {
@@ -54,6 +58,8 @@ In a rule declaration, “selectors” are the bits that determine which element
 ### Properties
 
 Finally, properties are what give the selected elements of a rule declaration their style. Properties are key-value pairs, and a rule declaration can contain one or more property declarations. Property declarations look like this:
+
+마지막으로 속성은 규식 선언의 선택된 요소를 자신의 스타일을 줄 것이다. 선택자와 그 값은 하나의 쌍으로 이루어 지고 규칙 선언은 하나이상의 속성 선언을 포함 할 수있다. 
 
 ```css
 /* some selector */ {
@@ -75,6 +81,16 @@ Finally, properties are what give the selected elements of a rule declaration th
 * In properties, put a space after, but not before, the `:` character.
 * Put closing braces `}` of rule declarations on a new line
 * Put blank lines between rule declarations
+
+* 들여쓰기는 소프트탭(2자리)를 사용한다.
+* 클래스 이름에 카멜표기법을 기준으로 한다.
+* ID 선택자는 사용하지 않는다.
+* 규칙 선언에서 여러 선택자를 사용하는 경우, 각 선택은 자신의 라인을 갖는다.
+* 여는 괄호 앞에 공백을 넣는다. ex: " {" 
+* 속성에는 뒤에 공백을 넣는다. 하지만 : 선택자는 넣지 않는다.
+* 닫는 중괄호는 새로운 줄에 넣는다.
+
+
 
 **Bad**
 
@@ -112,6 +128,13 @@ Finally, properties are what give the selected elements of a rule declaration th
 * Write detailed comments for code that isn't self-documenting:
   - Uses of z-index
   - Compatibility or browser-specific hacks
+
+* 블록 주석보다 줄 주석을 선호 합니다.
+* 주석 자신의 라인을 선호 합니다. 줄 끝에 주석을 달지 마십시오.
+* 주석의 내용을 상세하게 적습니다.
+  - z-index 사용
+  - 호환성 또는 브라우져 별 해킹.
+
 
 ### OOCSS and BEM
 
@@ -171,11 +194,22 @@ While it is possible to select elements by ID in CSS, it should generally be con
 
 For more on this subject, read [CSS Wizardry's article](http://csswizardry.com/2014/07/hacks-for-dealing-with-specificity/) on dealing with specificity.
 
+
+css 에서는 ID 를 사용하여 선택하는 것이 가능하지만, 일반적으로 배제되어야 한다. ID 선택자는 불필요하게 높은 수준의 특이성을 가진 규칙선언으로 재사용하기 어렵다.
+
+이 주제에 대한 자세한 내용은 [CSS Wizardry's article](http://csswizardry.com/2014/07/hacks-for-dealing-with-specificity/) 에서 특이성 처리 부분에서 읽을 수 있다.
+
+
 ### JavaScript hooks
 
 Avoid binding to the same class in both your CSS and JavaScript. Conflating the two often leads to, at a minimum, time wasted during refactoring when a developer must cross-reference each class they are changing, and at its worst, developers being afraid to make changes for fear of breaking functionality.
 
 We recommend creating JavaScript-specific classes to bind to, prefixed with `.js-`:
+
+css 와 Javascript 에서 둘 다 사용 하는 클래스를 만들지 말아라. 두가지를 동시에 사용하는 것은 개발자가 상호 참조를 해야하기도 하고 각각의 클래스를 리팩토링하는 시간도 잃게 된다. 최악의 경우에는 기능이 파괴된다. 
+
+자바스크립트만의 특정 클래스에 접두사를 달아주기를 원한다. '.js-'
+
 
 ```html
 <button class="btn btn-primary js-request-to-book">Request to Book</button>
@@ -184,6 +218,9 @@ We recommend creating JavaScript-specific classes to bind to, prefixed with `.js
 ### Border
 
 Use `0` instead of `none` to specify that a style has no border.
+
+border 가 없을 경우 none 보다는 0 으로 처리해준다.
+
 
 **Bad**
 
